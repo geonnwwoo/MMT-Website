@@ -1,0 +1,158 @@
+<script>
+    import PageHeader from '$lib/components/PageHeader.svelte';
+    import Section from '$lib/components/Section.svelte';
+    import Heading from '$lib/components/Heading.svelte';
+    import FlexBox from '$lib/components/FlexBox.svelte';
+    import Image from '$lib/components/Image.svelte';
+    import PanelBox from '$lib/components/PanelBox.svelte';
+    import Link from '$lib/components/Link.svelte';
+    import sponsorTiers from '$lib/jsons/sponsorTiers';
+
+    let windowWidth;
+    let windowHeight;
+    let learnMoreIsVisible = true;
+    let y;
+    let scrollOpacity = 1;
+    $: scrollOpacity = Math.max((windowHeight - 2 * y) / windowHeight, 0);
+    $: learnMoreIsVisible = scrollOpacity > 0;
+
+    function scrollToElem(e) {
+        e.scrollIntoView({
+            behavior: "smooth",
+        });
+    }
+</script>
+
+<svelte:window
+    bind:scrollY={y}
+    bind:innerWidth={windowWidth}
+    bind:innerHeight={windowHeight}
+/>
+
+<svelte:head>
+	<title>Problem of the Week</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']]
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</svelte:head>
+
+<!--
+<PageHeader title="Problem of the Week" description="Weekly Problem Solving" button_url="
+https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
+-->
+
+<!--
+<Section>
+    <div class="potw-layout">
+        <Heading text="PoTW #1" size={4} textColor="#3C6F8B" />
+
+        <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
+            <div class="problem-card">
+                <p class="problem-label">Problem</p>
+                <div class="latex-problem">
+                    <p>
+                        Let \(a,b,c\) be positive integers such that \(a+b+c=12\). Find the number of ordered triples \((a,b,c)\) with \(a \le b \le c\).
+                    </p>
+                </div>
+            </div>
+
+            <div class="submit-card">
+                <label for="potw-answer" class="submit-label">Your answer</label>
+                <textarea id="potw-answer" rows="5" placeholder="Type your answer here..."></textarea>
+                <button class="submit-button" type="button">Submit</button>
+            </div>
+        </PanelBox>
+    </div>
+</Section>
+
+-->
+
+<style>
+    .potw-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 1.25rem;
+        padding: 3rem 1rem 4rem;
+        background: #b9c6d2;
+    }
+
+    .problem-card {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: left;
+    }
+
+    .problem-label {
+        margin: 0;
+        color: #1f4c62;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-size: 0.95rem;
+    }
+
+    .latex-problem {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem 1.15rem;
+        color: #20313b;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        box-shadow: inset 0 0 0 1px rgba(60, 111, 139, 0.15);
+    }
+
+    .latex-problem p {
+        margin: 0;
+    }
+
+    .submit-card {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: left;
+    }
+
+    .submit-label {
+        font-weight: 700;
+        color: #1f4c62;
+    }
+
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+        resize: vertical;
+        border: 1px solid #aac4d3;
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        font: inherit;
+        background: #ffffff;
+        color: #20313b;
+    }
+
+    textarea:focus {
+        outline: none;
+        border-color: #65c083;
+        box-shadow: 0 0 0 3px rgba(101, 192, 131, 0.18);
+    }
+
+    .submit-button {
+        align-self: flex-start;
+        border: none;
+        border-radius: 999px;
+        background: #65c083;
+        color: white;
+        padding: 0.75rem 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+</style>
