@@ -49,8 +49,7 @@
 </svelte:head>
 
 
-<PageHeader title="Past Problems" description="Previous Problems of the Week and Solutions" button_url="
-https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
+<PageHeader title="Past Problems" description="Previous Problems of the Week and Solutions" button_url="/potw" button_text="See Current Problem" button_id="seePotw" target="_self"/>
 
 
 

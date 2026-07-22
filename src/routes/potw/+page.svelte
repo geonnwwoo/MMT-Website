@@ -62,8 +62,7 @@
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </svelte:head>
 
-<PageHeader title="Problem of the Week" description="Weekly Problem Solving" button_url="
-https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
+<PageHeader title="Problem of the Week" description="Weekly Problem Solving" button_url="/potw/archive" button_text="See Past Problems" button_id="seePotwArchive" target="_self"/>
 
 
 <Section>
