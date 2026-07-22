@@ -7,6 +7,9 @@
     import PanelBox from '$lib/components/PanelBox.svelte';
     import Link from '$lib/components/Link.svelte';
     import sponsorTiers from '$lib/jsons/sponsorTiers';
+    import { onMount, tick } from 'svelte';
+
+    let mathContainer;
 
     let windowWidth;
     let windowHeight;
@@ -21,6 +24,21 @@
             behavior: "smooth",
         });
     }
+
+    onMount(async () => {
+        await tick();
+
+        for (let attempts = 0; attempts < 100; attempts++) {
+            if (window.MathJax?.typesetPromise) {
+                await new Promise(requestAnimationFrame);
+                window.MathJax.typesetClear?.([mathContainer]);
+                await window.MathJax.typesetPromise([mathContainer]);
+                return;
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+    });
 </script>
 
 <svelte:window
@@ -33,6 +51,9 @@
 	<title>Problem of the Week</title>
     <script>
         window.MathJax = {
+            startup: {
+                typeset: false
+            },
             tex: {
                 inlineMath: [['\\(', '\\)'], ['$', '$']]
             }
@@ -41,14 +62,12 @@
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </svelte:head>
 
-<!--
 <PageHeader title="Problem of the Week" description="Weekly Problem Solving" button_url="
 https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
--->
 
 
 <Section>
-    <div class="potw-layout">
+    <div class="potw-layout" bind:this={mathContainer}>
         <Heading text="PoTW #1" size={4} textColor="#3C6F8B" />
 
         <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
