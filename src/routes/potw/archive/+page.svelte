@@ -41,12 +41,12 @@
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </svelte:head>
 
-<!--
-<PageHeader title="Problem of the Week" description="Weekly Problem Solving" button_url="
-https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
--->
 
-<!--
+<PageHeader title="Past Problems" description="Previous Problems of the Week and Solutions" button_url="
+https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_text="Sponsor Mustang Math!" button_id="sponsorMM"/>
+
+
+
 <Section>
     <div class="potw-layout">
         <Heading text="PoTW #1" size={4} textColor="#3C6F8B" />
@@ -61,16 +61,17 @@ https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_t
                 </div>
             </div>
 
-            <div class="submit-card">
-                <label for="potw-answer" class="submit-label">Your answer</label>
-                <textarea id="potw-answer" rows="5" placeholder="Type your answer here..."></textarea>
-                <button class="submit-button" type="button">Submit</button>
+            <div class="solution-card">
+                <p class="solution-label">Answer: 12</p>
+                <p>
+                    We can find that when (a=1) there are 5 possible triples,
+                    4 when (a=2), 2 when (a=3), and 1 when (a=4).
+                    Therefore, there is a total of 12 possible solutions.
+                </p>
             </div>
         </PanelBox>
     </div>
 </Section>
-
--->
 
 <style>
     .potw-layout {
@@ -114,45 +115,20 @@ https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_t
         margin: 0;
     }
 
-    .submit-card {
+    .solution-card {
         margin-top: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
         text-align: left;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem 1.15rem;
+        color: #20313b;
+        line-height: 1.8;
+        box-shadow: inset 0 0 0 1px rgba(60, 111, 139, 0.15);
     }
 
-    .submit-label {
+    .solution-label {
+        margin-top: 0;
         font-weight: 700;
         color: #1f4c62;
-    }
-
-    textarea {
-        width: 100%;
-        box-sizing: border-box;
-        resize: vertical;
-        border: 1px solid #aac4d3;
-        border-radius: 10px;
-        padding: 0.9rem 1rem;
-        font: inherit;
-        background: #ffffff;
-        color: #20313b;
-    }
-
-    textarea:focus {
-        outline: none;
-        border-color: #65c083;
-        box-shadow: 0 0 0 3px rgba(101, 192, 131, 0.18);
-    }
-
-    .submit-button {
-        align-self: flex-start;
-        border: none;
-        border-radius: 999px;
-        background: #65c083;
-        color: white;
-        padding: 0.75rem 1.2rem;
-        font-weight: 700;
-        cursor: pointer;
     }
 </style>
