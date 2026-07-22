@@ -7,6 +7,7 @@
     import PanelBox from '$lib/components/PanelBox.svelte';
     import Link from '$lib/components/Link.svelte';
     import sponsorTiers from '$lib/jsons/sponsorTiers';
+    import { onMount } from 'svelte';
 
     let windowWidth;
     let windowHeight;
@@ -15,6 +16,12 @@
     let scrollOpacity = 1;
     $: scrollOpacity = Math.max((windowHeight - 2 * y) / windowHeight, 0);
     $: learnMoreIsVisible = scrollOpacity > 0;
+
+    onMount(() => {
+        if (window.MathJax?.typesetPromise) {
+            window.MathJax.typesetPromise();
+        }
+    });
 
     function scrollToElem(e) {
         e.scrollIntoView({
@@ -64,9 +71,9 @@ https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_t
             <div class="solution-card">
                 <p class="solution-label">Answer: 12</p>
                 <p>
-                    We can find that when (a=1) there are 5 possible triples,
-                    4 when (a=2), 2 when (a=3), and 1 when (a=4).
-                    Therefore, there is a total of 12 possible solutions.
+                    We can find that when \(a=1\) there are \(5\) possible triples,
+                    4 when \(a=2\), 2 when \(a=3\), and 1 when \(a=4\).
+                    Therefore, there is a total of \(12\) possible solutions.
                 </p>
             </div>
         </PanelBox>
