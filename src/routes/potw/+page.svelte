@@ -7,6 +7,7 @@
     import PanelBox from '$lib/components/PanelBox.svelte';
     import Link from '$lib/components/Link.svelte';
     import sponsorTiers from '$lib/jsons/sponsorTiers';
+    import Scratchpad from '$lib/components/Scratchpad.svelte';
     import { onMount, tick } from 'svelte';
 
     let mathContainer;
@@ -16,6 +17,7 @@
     let learnMoreIsVisible = true;
     let y;
     let scrollOpacity = 1;
+    let scratchpadOpen = false;
     $: scrollOpacity = Math.max((windowHeight - 2 * y) / windowHeight, 0);
     $: learnMoreIsVisible = scrollOpacity > 0;
 
@@ -85,6 +87,22 @@ https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_t
                 <textarea id="potw-answer" rows="5" placeholder="Type your answer here..."></textarea>
                 <button class="submit-button" type="button">Submit</button>
             </div>
+
+            <div class="scratchpad-toggle-row">
+                <button
+                    class="scratchpad-toggle"
+                    type="button"
+                    aria-expanded={scratchpadOpen}
+                    on:click={() => scratchpadOpen = !scratchpadOpen}
+                >
+                    {scratchpadOpen ? 'Close' : 'Scratchpad'}
+                    <span aria-hidden="true">{scratchpadOpen ? '−' : '+'}</span>
+                </button>
+            </div>
+
+            {#if scratchpadOpen}
+                <Scratchpad />
+            {/if}
         </PanelBox>
     </div>
 </Section>
@@ -171,5 +189,34 @@ https://drive.google.com/file/d/1WubRiqJ7TAcbwGY8PX-xHiY5-_1r7iS3/view" button_t
         padding: 0.75rem 1.2rem;
         font-weight: 700;
         cursor: pointer;
+    }
+
+    .scratchpad-toggle-row {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.25rem;
+    }
+
+    .scratchpad-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: 1px solid #3c6f8b;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #1f4c62;
+        padding: 0.7rem 1.1rem;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .scratchpad-toggle:hover {
+        background: #e7f1f5;
+    }
+
+    .scratchpad-toggle span {
+        font-size: 1.25rem;
+        line-height: 1;
     }
 </style>
