@@ -1,30 +1,174 @@
-<!-- Scratchpad for the potw -->
-
 <script>
     import { onMount } from 'svelte';
 
+    const PAPER_WIDTH = 2000;
+    const PAPER_HEIGHT = 1200;
+
+    let scratchpadRoot;
     let canvas;
+    let canvasViewport;
     let context;
     let drawing = false;
     let tool = 'pen';
     let color = '#20313b';
-    let lineWidth = 3;
+
+    // Separate size preferences per tool, same default for both.
+    let penSize = 3;
+    let eraserSize = 3;
+    $: currentSize = tool === 'eraser' ? eraserSize : penSize;
+
     let history = [];
+    let fullscreen = false;
+
+    let position = { x: 0, y: 0 };
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let dragMinX = null, dragMaxX = null, dragMinY = null, dragMaxY = null;
+
+    let bodyOverflow = '';
+    let htmlOverflow = '';
+
+    let placeholderParent = null;
+    let placeholderNext = null;
+
+    function centerViewport() {
+        if (!canvasViewport) return;
+        canvasViewport.scrollLeft = (PAPER_WIDTH - canvasViewport.clientWidth) / 2;
+        canvasViewport.scrollTop = (PAPER_HEIGHT - canvasViewport.clientHeight) / 2;
+    }
 
     onMount(() => {
+        const dpr = window.devicePixelRatio || 1;
+
+        canvas.width = PAPER_WIDTH * dpr;
+        canvas.height = PAPER_HEIGHT * dpr;
+        canvas.style.width = PAPER_WIDTH + 'px';
+        canvas.style.height = PAPER_HEIGHT + 'px';
+
         context = canvas.getContext('2d');
+        context.scale(dpr, dpr);
         context.lineCap = 'round';
         context.lineJoin = 'round';
+
+        centerViewport();
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('blur', resetTransientState);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('blur', resetTransientState);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            if (fullscreen) unlockPageScroll();
+        };
     });
+
+    function handleVisibilityChange() {
+        if (document.hidden) resetTransientState();
+    }
+
+    function resetTransientState() {
+        isDragging = false;
+        if (drawing) {
+            drawing = false;
+            context.closePath();
+        }
+    }
+
+    function lockPageScroll() {
+        bodyOverflow = document.body.style.overflow;
+        htmlOverflow = document.documentElement.style.overflow;
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+    }
+
+    function unlockPageScroll() {
+        document.body.style.overflow = bodyOverflow;
+        document.documentElement.style.overflow = htmlOverflow;
+    }
+
+    function enterFullscreen() {
+        placeholderParent = scratchpadRoot.parentElement;
+        placeholderNext = scratchpadRoot.nextSibling;
+        document.body.appendChild(scratchpadRoot);
+        fullscreen = true;
+        lockPageScroll();
+        requestAnimationFrame(centerViewport);
+    }
+
+    function exitFullscreen() {
+        fullscreen = false;
+        unlockPageScroll();
+        if (placeholderParent) {
+            placeholderParent.insertBefore(scratchpadRoot, placeholderNext);
+        }
+        placeholderParent = null;
+        placeholderNext = null;
+        requestAnimationFrame(centerViewport);
+    }
+
+    function toggleFullscreen() {
+        if (fullscreen) {
+            exitFullscreen();
+        } else {
+            enterFullscreen();
+        }
+    }
+
+    function handleMouseDown(event) {
+        if (fullscreen) return;
+        isDragging = true;
+        dragStart.x = event.clientX - position.x;
+        dragStart.y = event.clientY - position.y;
+
+        const rect = scratchpadRoot.getBoundingClientRect();
+        const parent = scratchpadRoot.parentElement?.getBoundingClientRect();
+
+        if (parent) {
+            const untranslatedLeft = rect.left - position.x;
+            const untranslatedTop = rect.top - position.y;
+            dragMinX = parent.left - untranslatedLeft;
+            dragMaxX = parent.right - untranslatedLeft - rect.width;
+            dragMinY = parent.top - untranslatedTop;
+            dragMaxY = parent.bottom - untranslatedTop - rect.height;
+        } else {
+            dragMinX = dragMaxX = dragMinY = dragMaxY = null;
+        }
+    }
+
+    function handleMouseMove(event) {
+        if (!isDragging) return;
+
+        let nextX = event.clientX - dragStart.x;
+        let nextY = event.clientY - dragStart.y;
+
+        if (dragMinX !== null) {
+            const lowX = Math.min(dragMinX, dragMaxX);
+            const highX = Math.max(dragMinX, dragMaxX);
+            const lowY = Math.min(dragMinY, dragMaxY);
+            const highY = Math.max(dragMinY, dragMaxY);
+            nextX = Math.min(Math.max(nextX, lowX), highX);
+            nextY = Math.min(Math.max(nextY, lowY), highY);
+        }
+
+        position = { x: nextX, y: nextY };
+    }
+
+    function handleMouseUp() {
+        isDragging = false;
+    }
 
     function pointFromEvent(event) {
         const bounds = canvas.getBoundingClientRect();
         return {
-            x: (event.clientX - bounds.left) * (canvas.width / bounds.width),
-            y: (event.clientY - bounds.top) * (canvas.height / bounds.height)
+            x: event.clientX - bounds.left,
+            y: event.clientY - bounds.top
         };
     }
-//saves canvas state so that the undo button can work
+
     function saveState() {
         history = [...history.slice(-20), context.getImageData(0, 0, canvas.width, canvas.height)];
     }
@@ -54,19 +198,27 @@
     }
 
     function stopDrawing(event) {
-        if (!drawing) return;
-        drawing = false;
-        context.closePath();
-
         if (canvas.hasPointerCapture(event.pointerId)) {
             canvas.releasePointerCapture(event.pointerId);
         }
+        if (!drawing) return;
+        drawing = false;
+        context.closePath();
     }
 
     function configureBrush() {
         context.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
         context.strokeStyle = color;
-        context.lineWidth = tool === 'eraser' ? lineWidth * 4 : lineWidth;
+        context.lineWidth = tool === 'eraser' ? eraserSize * 4 : penSize;
+    }
+
+    function handleSizeInput(event) {
+        const value = +event.currentTarget.value;
+        if (tool === 'eraser') {
+            eraserSize = value;
+        } else {
+            penSize = value;
+        }
     }
 
     function undo() {
@@ -84,13 +236,18 @@
     }
 </script>
 
-<div class="scratchpad">
-    <div class="scratchpad-heading">
+<div
+    class="scratchpad"
+    class:fullscreen
+    bind:this={scratchpadRoot}
+    style={!fullscreen ? `transform: translate(${position.x}px, ${position.y}px);` : ''}
+>
+    <div class="scratchpad-heading" on:mousedown={handleMouseDown}>
         <div>
             <p class="eyebrow">Workspace</p>
             <h3>Scratchpad</h3>
         </div>
-        <p class="hint">Draw with a mouse, finger, or stylus.</p>
+        <p class="hint">Draw with a mouse, finger, or stylus. Scroll to reveal more paper.</p>
     </div>
 
     <div class="toolbar" aria-label="Scratchpad tools">
@@ -118,25 +275,29 @@
 
         <label class="size-control">
             <span>Size</span>
-            <input type="range" min="1" max="10" bind:value={lineWidth} />
+            <input type="range" min="1" max="10" value={currentSize} on:input={handleSizeInput} />
         </label>
 
         <div class="toolbar-spacer"></div>
 
+        <button type="button" on:click={(e) => { e.currentTarget.blur(); toggleFullscreen(); }}>
+            {fullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+        </button> 
         <button type="button" on:click={undo} disabled={history.length === 0}>Undo</button>
         <button type="button" class="clear-button" on:click={clearCanvas}>Clear</button>
     </div>
 
-    <canvas
-        bind:this={canvas}
-        width="1000"
-        height="500"
-        aria-label="Blank drawing area for working out the problem"
-        on:pointerdown={startDrawing}
-        on:pointermove={draw}
-        on:pointerup={stopDrawing}
-        on:pointercancel={stopDrawing}
-    ></canvas>
+    <div class="canvas-viewport" bind:this={canvasViewport}>
+        <canvas
+            bind:this={canvas}
+            aria-label="Blank drawing area for working out the problem"
+            on:pointerdown={startDrawing}
+            on:pointermove={draw}
+            on:pointerup={stopDrawing}
+            on:pointercancel={stopDrawing}
+        ></canvas>
+    </div>
+
 </div>
 
 <style>
@@ -147,6 +308,20 @@
         border-radius: 14px;
         background: #eef5f8;
         text-align: left;
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box;
+    }
+
+    .scratchpad.fullscreen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        margin-top: 0;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
     }
 
     .scratchpad-heading {
@@ -155,6 +330,10 @@
         justify-content: space-between;
         gap: 1rem;
         margin-bottom: 0.85rem;
+    }
+
+    .scratchpad:not(.fullscreen) .scratchpad-heading {
+        cursor: move;
     }
 
     .eyebrow {
@@ -241,12 +420,21 @@
         accent-color: #3c6f8b;
     }
 
-    canvas {
-        display: block;
-        width: 100%;
-        height: auto;
+    .canvas-viewport {
+        overflow: auto;
         border: 1px solid #c4d6df;
         border-radius: 10px;
+        background: #ffffff;
+        height: 380px;
+    }
+
+    .fullscreen .canvas-viewport {
+        flex: 1;
+        height: auto;
+    }
+
+    canvas {
+        display: block;
         background-color: #ffffff;
         background-image:
             linear-gradient(rgba(60, 111, 139, 0.08) 1px, transparent 1px),
@@ -264,6 +452,10 @@
 
         .toolbar-spacer {
             display: none;
+        }
+
+        .canvas-viewport {
+            height: 300px;
         }
     }
 </style>
