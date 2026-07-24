@@ -9,6 +9,7 @@
     import sponsorTiers from '$lib/jsons/sponsorTiers';
     import Scratchpad from '$lib/components/Scratchpad.svelte';
     import { onMount, tick } from 'svelte';
+    import { evaluate } from 'mathjs';
 
     let mathContainer;
 
@@ -20,6 +21,68 @@
     let scratchpadOpen = false;
     $: scrollOpacity = Math.max((windowHeight - 2 * y) / windowHeight, 0);
     $: learnMoreIsVisible = scrollOpacity > 0;
+
+    // answer checking logic:
+    const CORRECT_ANSWER = '12';
+    let userAnswer = '';
+    let feedback = null;
+
+    // relative tolerance for floating point
+    const TOLERANCE = 1e-9;
+    function safeEvaluate(expr) {
+        const value = evaluate(expr);
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
+            throw new Error('Non-numeric result');
+        }
+        return value;
+    }
+
+    function numbersMatch(a, b) {
+        const diff = Math.abs(a - b);
+        const scale = Math.max(1, Math.abs(a), Math.abs(b));
+        return diff <= TOLERANCE * scale;
+    }
+
+    function checkAnswer() {
+        if (userAnswer.trim() === '') {
+            feedback = null;
+            return;
+        }
+
+        let userValue;
+        try {
+            userValue = safeEvaluate(userAnswer);
+        } catch (err) {
+            feedback = 'invalid';
+            return;
+        }
+
+        let correctValue;
+        try {
+            correctValue = safeEvaluate(CORRECT_ANSWER);
+        } catch (err) {
+            console.error('CORRECT_ANSWER failed to evaluate:', CORRECT_ANSWER, err);
+            feedback = 'invalid';
+            return;
+        }
+
+        feedback = numbersMatch(userValue, correctValue) ? 'correct' : 'incorrect';
+    }
+    function handleInput() {
+        if (userAnswer.includes('\n')) {
+            userAnswer = userAnswer.replace(/\n/g, '');
+        }
+        if (feedback !== null) {
+            feedback = null;
+        }
+    }
+
+    function handleKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            checkAnswer();
+        }
+    }
 
     function scrollToElem(e) {
         e.scrollIntoView({
@@ -83,8 +146,29 @@
 
             <div class="submit-card">
                 <label for="potw-answer" class="submit-label">Your answer</label>
-                <textarea id="potw-answer" rows="5" placeholder="Type your answer here..."></textarea>
-                <button class="submit-button" type="button">Submit</button>
+                <textarea
+                    id="potw-answer"
+                    rows="5"
+                    placeholder="Type your answer here..."
+                    bind:value={userAnswer}
+                    on:input={handleInput}
+                    on:keydown={handleKeydown}
+                ></textarea> 
+                <button class="submit-button" type="button" on:click={checkAnswer}>Submit</button>
+
+                {#if feedback === 'correct'}
+                    <div class="feedback feedback-correct" role="status">
+                        ✓ Correct! Great job.
+                    </div>
+                {:else if feedback === 'incorrect'}
+                    <div class="feedback feedback-incorrect" role="status">
+                        ✗ Not quite — try again.
+                    </div>
+                {:else if feedback === 'invalid'}
+                    <div class="feedback feedback-invalid" role="status">
+                        Hmm... that doesn't look like a valid expression. 
+                    </div>
+                {/if}
             </div>
 
             <div class="scratchpad-toggle-row">
@@ -183,11 +267,40 @@
         align-self: flex-start;
         border: none;
         border-radius: 999px;
-        background: #65c083;
+        background: #4a9d67;
         color: white;
         padding: 0.75rem 1.2rem;
         font-weight: 700;
         cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .submit-button:hover {
+        background: #65c083;
+    }
+    .feedback {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+    .feedback-correct {
+        background: rgba(101, 192, 131, 0.15);
+        color: #1c7a41;
+        box-shadow: inset 0 0 0 1px rgba(28, 122, 65, 0.25);
+    }
+
+    .feedback-incorrect {
+        background: rgba(219, 84, 84, 0.1);
+        color: #b23a3a;
+        box-shadow: inset 0 0 0 1px rgba(178, 58, 58, 0.25);
+    }
+
+    .feedback-invalid {
+        background: rgba(240, 176, 64, 0.12);
+        color: #8a5a10;
+        font-weight: 500;
+        box-shadow: inset 0 0 0 1px rgba(138, 90, 16, 0.25);
     }
 
     .scratchpad-toggle-row {
