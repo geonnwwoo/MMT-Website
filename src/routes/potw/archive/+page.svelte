@@ -9,6 +9,8 @@
     import sponsorTiers from '$lib/jsons/sponsorTiers';
     import { onMount } from 'svelte';
 
+    export let data;
+
     let windowWidth;
     let windowHeight;
     let learnMoreIsVisible = true;
@@ -55,27 +57,36 @@
 
 <Section>
     <div class="potw-layout">
-        <Heading text="PoTW #1" size={4} textColor="#3C6F8B" />
+        {#if data.problems.length === 0}
+            <Heading text="Past Problems" size={4} textColor="#3C6F8B" />
 
-        <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
-            <div class="problem-card">
-                <p class="problem-label">Problem</p>
-                <div class="latex-problem">
-                    <p>
-                        Let \(a,b,c\) be positive integers such that \(a+b+c=12\). Find the number of ordered triples \((a,b,c)\) with \(a \le b \le c\).
-                    </p>
+            <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
+                <div class="problem-card">
+                    <p class="problem-label">Problem</p>
+                    <div class="latex-problem">
+                        <p>No problems archived yet, check back soon for past problems and their solutions.</p>
+                    </div>
                 </div>
-            </div>
+            </PanelBox>
+        {:else}
+            {#each data.problems as potw (potw.id)}
+                <Heading text={potw.title} size={4} textColor="#3C6F8B" />
 
-            <div class="solution-card">
-                <p class="solution-label">Answer: 12</p>
-                <p>
-                    We can find that when \(a=1\) there are \(5\) possible triples,
-                    4 when \(a=2\), 2 when \(a=3\), and 1 when \(a=4\).
-                    Therefore, there is a total of \(12\) possible solutions.
-                </p>
-            </div>
-        </PanelBox>
+                <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
+                    <div class="problem-card">
+                        <p class="problem-label">Problem</p>
+                        <div class="latex-problem">
+                            <p>{@html potw.problem}</p>
+                        </div>
+                    </div>
+
+                    <div class="solution-card">
+                        <p class="solution-label">Answer: {potw.answer}</p>
+                        <p>{@html potw.solution}</p>
+                    </div>
+                </PanelBox>
+            {/each}
+        {/if}
     </div>
 </Section>
 

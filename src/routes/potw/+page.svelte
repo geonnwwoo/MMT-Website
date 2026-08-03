@@ -116,9 +116,10 @@
 
 <Section>
     <div class="potw-layout" bind:this={mathContainer}>
-        <Heading text={data.potw.title} size={4} textColor="#3C6F8B" />
+        {#if data.potw}
+            <Heading text={data.potw.title} size={4} textColor="#3C6F8B" />
 
-        <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
+            <PanelBox width="min(920px, 92vw)" padding="2rem" borderRadius="18px" style="background: #f8fbfd;">
             <div class="problem-card">
                 <p class="problem-label">Problem</p>
                 <div class="latex-problem">
@@ -170,7 +171,10 @@
             {#if scratchpadOpen}
                 <Scratchpad />
             {/if}
-        </PanelBox>
+            </PanelBox>
+        {:else}
+            <Heading text="No current problem" size={3} textColor="#3C6F8B" />
+        {/if}
     </div>
 </Section>
 

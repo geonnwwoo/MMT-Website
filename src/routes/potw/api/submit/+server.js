@@ -1,9 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { evaluate } from 'mathjs';
+import { getCurrentProblem } from '$lib/server/potw.js';
 
-
-
-const CORRECT_ANSWER = '12';   // ANSWER
 const TOLERANCE = 1e-9;
 
 function safeEvaluate(expr) {
@@ -25,7 +23,13 @@ function numbersMatch(a, b) {
 }
 
 export async function POST({ request }) {
-    const { answer } = await request.json();
+    const currentProblem = getCurrentProblem();
+    if (!currentProblem) {
+        return json({ feedback: 'unavailable' }, { status: 404 });
+    }
+
+    const body = await request.json();
+    const answer = typeof body?.answer === 'string' ? body.answer : '';
 
     if (answer.trim() === '') {
         return json({ feedback: null });
@@ -36,9 +40,9 @@ export async function POST({ request }) {
         return json({ feedback: 'invalid' });
     }
 
-    const correctResult = safeEvaluate(CORRECT_ANSWER);
+    const correctResult = safeEvaluate(currentProblem.answer);
     if (!correctResult.valid) {
-        console.error('CORRECT_ANSWER failed to evaluate:', CORRECT_ANSWER);
+        console.error('The current PoTW answer failed to evaluate.');
         return json({ feedback: 'invalid' });
     }
 
