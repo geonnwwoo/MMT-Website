@@ -5,7 +5,11 @@ export function load() {
 
     return {
         potw: currentProblem
-            ? { title: currentProblem.title, problem: currentProblem.problem }
+            ? {
+                title: currentProblem.title,
+                problem: currentProblem.problem,
+                submissionFormUrl: currentProblem.submissionFormUrl
+            }
             : null
     };
 }

@@ -171,6 +171,25 @@
             {#if scratchpadOpen}
                 <Scratchpad />
             {/if}
+
+            <div class="solution-submission-card">
+                <h2>Submit Your Full Solution</h2>
+                <p>
+                    Ready to share your reasoning and solution? Submit your complete written solution through our Google Form, and have a chance at winning monetary prizes from this program!
+                </p>
+                {#if data.potw.submissionFormUrl}
+                    <a
+                        class="solution-submission-button"
+                        href={data.potw.submissionFormUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Open Submission Form
+                    </a>
+                {:else}
+                    <p class="submission-coming-soon">Submission form coming soon.</p>
+                {/if}
+            </div>
             </PanelBox>
         {:else}
             <Heading text="No current problem" size={3} textColor="#3C6F8B" />
@@ -318,5 +337,47 @@
     .scratchpad-toggle span {
         font-size: 1.25rem;
         line-height: 1;
+    }
+
+    .solution-submission-card {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: #e7f1f5;
+        color: #20313b;
+        text-align: center;
+    }
+
+    .solution-submission-card h2 {
+        margin: 0 0 0.5rem;
+        color: #1f4c62;
+        font-size: 1.35rem;
+    }
+
+    .solution-submission-card p {
+        margin: 0 auto 1rem;
+        max-width: 42rem;
+        line-height: 1.6;
+    }
+
+    .solution-submission-button {
+        display: inline-block;
+        border-radius: 999px;
+        background: #3c6f8b;
+        color: #ffffff;
+        padding: 0.75rem 1.2rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .solution-submission-button:hover {
+        background: #1f4c62;
+    }
+
+    .solution-submission-card .submission-coming-soon {
+        margin-bottom: 0;
+        color: #526873;
+        font-weight: 700;
     }
 </style>
