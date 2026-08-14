@@ -2,43 +2,92 @@
     /** @type {import('./$types').PageData} */
     import PageHeader from "$lib/components/PageHeader.svelte";
     import PanelBox from "$lib/components/PanelBox.svelte"
+    import { onMount } from 'svelte';
 
-    const products = [
+  const SHOPIFY_DOMAIN = 'qz6ccd-90.myshopify.com';
+  const SHOPIFY_ACCESS_TOKEN = '04493c9575f1d96d8529ec2caabdaecc';
+
+
+
+  let productNodes = [];
+
+  onMount(() => {
+    const mountShopifyButtons = () => {
+      const client = ShopifyBuy.buildClient({
+        domain: SHOPIFY_DOMAIN,
+        storefrontAccessToken: SHOPIFY_ACCESS_TOKEN
+      });
+
+      ShopifyBuy.UI.onReady(client).then(function (ui) {
+        products.forEach((product, index) => {
+          const node = productNodes[index];
+
+          if (!product.shopifyId || !node) {
+            return;
+          }
+
+          ui.createComponent('product', {
+            id: product.shopifyId,
+            node,
+            moneyFormat: '%24%7B%7Bamount%7D%7D',
+            options: {
+              product: {
+                contents: {
+                  img: false,
+                  title: false,
+                  price: false,
+                  button: true,
+                  description: false,
+                  quantity: false,
+                  options: false
+                },
+                text: {
+                  button: 'Add to cart'
+                },
+                styles: {
+                  button: {
+                    'background-color': '#333333',
+                    color: '#ffffff',
+                    'border-radius': '12px',
+                    'font-weight': '700',
+                    padding: '0.9rem 1.2rem',
+                    ':hover': {
+                      'background-color': '#111111'
+                    }
+                  }
+                }
+              },
+              cart: {
+                text: {
+                  total: 'Subtotal',
+                  button: 'Checkout'
+                }
+              },
+              toggle: {}
+            }
+          });
+        });
+      });
+    };
+
+    if (window.ShopifyBuy?.UI) {
+      mountShopifyButtons();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+    script.onload = mountShopifyButtons;
+    document.body.appendChild(script);
+  });
+
+  const products = [
         {
-            title: "Test Hoodie",
+            title: "Shirt",
             image: "/merch/merchtestimg.webp",
             alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
-        },
-        {
-            title: "Test Hoodie",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
-        },
-        {
-            title: "Test Hoodie",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
-        },
-        {
-            title: "Test Hoodie",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
-        },
-        {
-            title: "Test Hoodie",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
-        },
-        {
-            title: "Test Hoodie",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            sizes: ["S", "L", "XL"]
+            shopifyId: '8050813173843',
         }
     ]
 </script>
@@ -55,20 +104,14 @@
 	id=""
 />
 
-
 <div class="product-grid" id="products">
-    {#each products as product}
+  {#each products as product, index}
         <PanelBox borderRadius="12px" style="display: flex; flex-direction: column; opacity: 1;">
             <h2 class="title">{product.title}</h2>
             <div class="image-container">
                 <img class="image" src={product.image} alt={product.alt} loading="lazy"/> <!--product image-->
             </div>
-            <div class="size-container">
-                {#each product.sizes as size}
-                    <button class="size-button">{size}</button>
-                {/each}
-            <p class="size-quantity">999</p> <!--product quantity-->
-            </div>
+      <div class="shopify-button" bind:this={productNodes[index]}></div>
         </PanelBox>
     {/each}
 </div>
@@ -111,31 +154,7 @@ h2 {
     transform: scale(1.05);
 }
 
-.size-container {
-    display: flex;
-    margin-top: 15px;
-}
-
-.size-button {
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-right: .5rem;
-}
-
-.size-button:hover {
-    cursor: pointer;
-    border-color: #333;
-}
-
-.size-quantity {
-    margin-left: auto;
-    font-size: 1.2rem;
-    color: #333;
-}
-
-.size-quantity::after {
-    content: " left";
+.shopify-button {
+  margin-top: 15px;
 }
 </style>
