@@ -128,25 +128,32 @@ h2 {
 .product-grid{
     display: grid;
     box-sizing: border-box;
-    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(max(min(100%, 400px), 25%), 1fr));
     justify-content: center;
     background-color: #ffffff;
     box-shadow: 5px 10px 10px rgb(0, 0, 0, 0.1);
     opacity: 0.8;
     transition: 0.5s;
-    margin: "10px";
-    padding: "10px";
+    margin: 10px;
+    padding: 10px;
     gap: 10px;
 }
 
 
 .image-container {
+    display: flex;
+    aspect-ratio: 3 / 4;
+    width: 100%;
     overflow: hidden;
     align-self: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .image {
     object-fit: cover;
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
     transition: 0.3s;
 }
