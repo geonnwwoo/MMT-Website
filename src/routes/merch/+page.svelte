@@ -4,8 +4,8 @@
     import PanelBox from "$lib/components/PanelBox.svelte"
     import { onMount } from 'svelte';
 
-  const SHOPIFY_DOMAIN = 'qz6ccd-90.myshopify.com';
-  const SHOPIFY_ACCESS_TOKEN = '04493c9575f1d96d8529ec2caabdaecc';
+  const SHOPIFY_DOMAIN = '1qmb4h-vy.myshopify.com';
+  const SHOPIFY_ACCESS_TOKEN = '458c0b3a70a69d276882db89159cf723';
 
 
 
@@ -87,7 +87,7 @@
             title: "Shirt",
             image: "/merch/merchtestimg.webp",
             alt: "image of hoodie",
-            shopifyId: '8050813173843',
+            shopifyId: '10769258774820',
         }
     ]
 </script>
