@@ -4,8 +4,8 @@
     import PanelBox from "$lib/components/PanelBox.svelte"
     import { onMount } from 'svelte';
 
-  const SHOPIFY_DOMAIN = '1qmb4h-vy.myshopify.com';
-  const SHOPIFY_ACCESS_TOKEN = '458c0b3a70a69d276882db89159cf723';
+  const SHOPIFY_DOMAIN = 'tuig05-bz.myshopify.com';
+  const SHOPIFY_ACCESS_TOKEN = '372e80b1413b495d95754f77e103fd31';
 
 
 
@@ -31,40 +31,58 @@
             node,
             moneyFormat: '%24%7B%7Bamount%7D%7D',
             options: {
-              product: {
-                contents: {
-                  img: false,
-                  title: false,
-                  price: false,
-                  button: true,
-                  description: false,
-                  quantity: false,
-                  options: false
-                },
-                text: {
-                  button: 'Add to cart'
-                },
-                styles: {
-                  button: {
-                    'background-color': '#333333',
-                    color: '#ffffff',
-                    'border-radius': '12px',
-                    'font-weight': '700',
-                    padding: '0.9rem 1.2rem',
-                    ':hover': {
-                      'background-color': '#111111'
-                    }
-                  }
+          "product": {
+            "styles": {
+              "product": {
+                "@media (min-width: 601px)": {
+                  "max-width": "calc(25% - 20px)",
+                  "margin-left": "20px",
+                  "margin-bottom": "50px"
                 }
-              },
-              cart: {
-                text: {
-                  total: 'Subtotal',
-                  button: 'Checkout'
-                }
-              },
-              toggle: {}
+              }
+            },
+            "text": {
+              "button": "Add to cart"
             }
+          },
+          "productSet": {
+            "styles": {
+              "products": {
+                "@media (min-width: 601px)": {
+                  "margin-left": "-20px"
+                }
+              }
+            }
+          },
+          "modalProduct": {
+            "contents": {
+              "img": false,
+              "imgWithCarousel": true,
+              "button": false,
+              "buttonWithQuantity": true
+            },
+            "styles": {
+              "product": {
+                "@media (min-width: 601px)": {
+                  "max-width": "100%",
+                  "margin-left": "0px",
+                  "margin-bottom": "0px"
+                }
+              }
+            },
+            "text": {
+              "button": "Add to cart"
+            }
+          },
+          "option": {},
+          "cart": {
+            "text": {
+              "total": "Subtotal",
+              "button": "Checkout"
+            }
+          },
+          "toggle": {}
+        }
           });
         });
       });
@@ -84,10 +102,40 @@
 
   const products = [
         {
-            title: "Shirt",
+            title: "Hoodies - Dark Gray",
             image: "/merch/merchtestimg.webp",
             alt: "image of hoodie",
-            shopifyId: '10769258774820',
+            shopifyId: '8933272289433',
+        },
+        {
+            title: "Hoodies - Turquoise",
+            image: "/merch/merchtestimg.webp",
+            alt: "image of hoodie",
+            shopifyId: '8933258035353',
+        },
+        {
+            title: "MMT 2026 Shirt - Light Blue",
+            image: "/merch/merchtestimg.webp",
+            alt: "image of hoodie",
+            shopifyId: '8933272584345',
+        },
+        {
+            title: "MMT 2026 Shirt - Dark Blue",
+            image: "/merch/merchtestimg.webp",
+            alt: "image of hoodie",
+            shopifyId: '8933272715417',
+        },
+        {
+            title: "MMT 2025 Shirt - Gray",
+            image: "/merch/merchtestimg.webp",
+            alt: "image of hoodie",
+            shopifyId: '8933272780953',
+        },
+        {
+            title: "MMT 2024 Shirt - Light Green",
+            image: "/merch/merchtestimg.webp",
+            alt: "image of hoodie",
+            shopifyId: '8933272879257',
         }
     ]
 </script>
