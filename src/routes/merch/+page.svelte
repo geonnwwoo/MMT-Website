@@ -32,13 +32,68 @@
             moneyFormat: '%24%7B%7Bamount%7D%7D',
             options: {
           "product": {
+            "contents": {
+              "details": true,
+              "title": false,
+              "price": false
+            },
+            "templates": {
+              "details": `<div class="{{data.classes.product.details}}">
+                            <span class="{{data.classes.product.title}}" data-element="product.title">{{data.title}}</span>
+                            <span class="{{data.classes.product.price}}" data-element="product.price">{{data.formattedPrice}}</span>
+                          </div>`
+            },
+            "order": [
+              'img',
+              'title',
+              'price',
+              'details',
+              'options',
+              'quantity',
+              'button'
+            ],
+            "classes": {
+              "details": 'product-details'
+            },
             "styles": {
-              "product": {
-                "@media (min-width: 601px)": {
-                  "max-width": "calc(25% - 20px)",
-                  "margin-left": "20px",
-                  "margin-bottom": "50px"
+              "options": {
+                "max-width": '100% !important'
+              },
+              "details": {
+                "padding": '10px',
+                "margin": '10px auto',
+                "border-radius": '10px',
+                "background-color": '#f1f5f9'
+              },
+              "title": {
+                "display": 'block',
+                "text-align": 'left',
+                "font-size": '1.5rem; ',
+                "font-weight": '700',
+                "color": 'black',
+                "width": '100%'
+              },
+              "price": {
+                "display": 'block',
+                "text-align": 'left',
+                "font-size": '2rem',
+                "font-weight": '200',
+                "color": '#333',
+                "width": '100%'
+              },
+              "button": {
+                "width": '100%',
+                "margin": '20px',
+                "border-radius": '10px',
+                "background-color": '#1B9AAA',
+                "color": "white",
+                ":hover": {
+                  "background-color": '#167d8a'
                 }
+              },
+              "product": {
+                "width": '100%',
+                "font-family": '"Ubuntu", "Roboto", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important'
               }
             },
             "text": {
@@ -61,27 +116,54 @@
               "button": false,
               "buttonWithQuantity": true
             },
-            "styles": {
-              "product": {
-                "@media (min-width: 601px)": {
-                  "max-width": "100%",
-                  "margin-left": "0px",
-                  "margin-bottom": "0px"
-                }
-              }
-            },
             "text": {
               "button": "Add to cart"
             }
           },
-          "option": {},
+          "option": {
+            "styles": {
+              "wrapper": {
+                "border-radius": '10px',
+                "width": 'fit-content',
+              },
+              "select": {
+                "width": 'fit-content',
+                "padding": '5px 20px',
+                "margin-right": '10px',
+                "color": 'black'
+              },
+              "label": {
+                "width": "10px"
+              }
+            }
+          },
           "cart": {
+            "styles": {
+              "cart": {
+                "font-family": '"Ubuntu", "Roboto", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important'
+              },
+              "button": {
+                "background-color": '#1c6825',
+                ":hover": {
+                  "background-color": '#1c6825'
+                }
+              }
+            },
             "text": {
               "total": "Subtotal",
               "button": "Checkout"
             }
           },
-          "toggle": {}
+          "toggle": {
+            "styles": {
+              "toggle": {
+                "background-color": '#1c6825',
+                ":hover": {
+                  "background-color": '#1c6825'
+                }
+              }
+            }
+          }
         }
           });
         });
@@ -155,7 +237,6 @@
 <div class="product-grid" id="products">
   {#each products as product, index}
         <PanelBox borderRadius="12px" style="display: flex; flex-direction: column; opacity: 1;">
-            <h2 class="title">{product.title}</h2>
             <div class="image-container">
                 <img class="image" src={product.image} alt={product.alt} loading="lazy"/> <!--product image-->
             </div>
@@ -166,12 +247,6 @@
 
 
 <style>
-
-h2 {
-    font-weight: 800;
-    font-size: 1.8rem;
-    color: #333;
-}
 
 .product-grid{
     display: grid;
@@ -210,6 +285,8 @@ h2 {
 }
 
 .shopify-button {
-  margin-top: 15px;
+  max-width: 100% !important;
+  width: 100% !important;
 }
+
 </style>
