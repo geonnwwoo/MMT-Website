@@ -189,42 +189,12 @@
   });
 
   const products = [
-        {
-            title: "Hoodies - Dark Gray",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933272289433',
-        },
-        {
-            title: "Hoodies - Turquoise",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933258035353',
-        },
-        {
-            title: "MMT 2026 Shirt - Light Blue",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933272584345',
-        },
-        {
-            title: "MMT 2026 Shirt - Dark Blue",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933272715417',
-        },
-        {
-            title: "MMT 2025 Shirt - Gray",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933272780953',
-        },
-        {
-            title: "MMT 2024 Shirt - Light Green",
-            image: "/merch/merchtestimg.webp",
-            alt: "image of hoodie",
-            shopifyId: '8933272879257',
-        }
+        { shopifyId: '8933272289433' },
+        { shopifyId: '8933258035353' },
+        { shopifyId: '8933272584345' },
+        { shopifyId: '8933272715417' },
+        { shopifyId: '8933272780953' },
+        { shopifyId: '8933272879257' }
     ]
 </script>
 
@@ -237,18 +207,15 @@
 	description="Shop Mustang Math Merch"
 	button_url="#products"
 	button_text="Shop Now"
-	id=""
+  target="_self"
 />
 
 <div class="product-grid" id="products">
   {#each products as product, index}
-        <PanelBox borderRadius="12px" style="display: flex; flex-direction: column; opacity: 1;">
-            <!-- <div class="image-container">
-                <img class="image" src={product.image} alt={product.alt} loading="lazy"/> product image -->
-            <!-- </div> -->
-      <div class="shopify-button" bind:this={productNodes[index]}></div>
-        </PanelBox>
-    {/each}
+    <PanelBox borderRadius="12px" style="display: flex; flex-direction: column; opacity: 1;">
+        <div class="shopify-button" bind:this={productNodes[index]}></div>
+    </PanelBox>
+  {/each}
 </div>
 
 
@@ -266,28 +233,6 @@
     margin: 10px;
     padding: 10px;
     gap: 10px;
-}
-
-
-.image-container {
-    display: flex;
-    aspect-ratio: 3 / 4;
-    width: 100%;
-    overflow: hidden;
-    align-self: center;
-    justify-content: center;
-    align-items: center;
-}
-
-.image {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    transition: 0.3s;
-}
-.image:hover {
-    transform: scale(1.05);
 }
 
 .shopify-button {
