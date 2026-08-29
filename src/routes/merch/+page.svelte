@@ -56,6 +56,12 @@
               "details": 'product-details'
             },
             "styles": {
+              "img": {
+                "border-radius": "10px",
+                "aspect-ratio": "3/4",
+                "object-fit": "cover",
+                "width": "100%"
+              },
               "options": {
                 "max-width": '100% !important'
               },
@@ -68,7 +74,7 @@
               "title": {
                 "display": 'block',
                 "text-align": 'left',
-                "font-size": '1.5rem; ',
+                "font-size": '1.5rem',
                 "font-weight": '700',
                 "color": 'black',
                 "width": '100%'
