@@ -237,9 +237,9 @@
 <div class="product-grid" id="products">
   {#each products as product, index}
         <PanelBox borderRadius="12px" style="display: flex; flex-direction: column; opacity: 1;">
-            <div class="image-container">
-                <img class="image" src={product.image} alt={product.alt} loading="lazy"/> <!--product image-->
-            </div>
+            <!-- <div class="image-container">
+                <img class="image" src={product.image} alt={product.alt} loading="lazy"/> product image -->
+            <!-- </div> -->
       <div class="shopify-button" bind:this={productNodes[index]}></div>
         </PanelBox>
     {/each}
