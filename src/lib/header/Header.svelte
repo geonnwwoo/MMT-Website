@@ -63,7 +63,7 @@
     { path: "/sponsors", text: "Sponsors", hasSubPages: false },
     { path: "/donate", text: "Donate", hasSubPages: false },
     { path: "/parent-info", text: "Parent Info", hasSubPages: false },
-	
+	{ path: "/merch", text: "Merch", hasSubPages: false },
   ];
   const show = [0, 0, 0];
 
