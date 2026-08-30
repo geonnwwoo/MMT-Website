@@ -1,0 +1,27 @@
+const query = `
+  {
+    product(id: "gid://shopify/Product/YOUR_PRODUCT_ID") {
+      title
+      variants(first: 10) {
+        edges {
+          node {
+            title
+            availableForSale
+            quantityAvailable
+          }
+        }
+      }
+    }
+  }
+`;
+
+fetch("https://1qmb4h-vy.myshopify.com/api/2024-01/graphql.json", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Shopify-Storefront-Access-Token": "458c0b3a70a69d276882db89159cf723"
+  },
+  body: JSON.stringify({ query })
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
