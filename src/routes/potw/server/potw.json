@@ -2,33 +2,34 @@
   {
     "id": 1,
     "title": "PoTW #1",
-    "problem": "Let \\(a,b,c\\) be positive integers such that \\(a+b+c=12\\). Find the number of ordered triples \\((a,b,c)\\) with \\(a \\le b \\le c\\).",
-    "answer": "12",
-    "solution": "We can find that when \\(a=1\\) there are \\(5\\) possible triples, 4 when \\(a=2\\), 2 when \\(a=3\\), and 1 when \\(a=4\\). Therefore, there is a total of \\(12\\) possible solutions.",
+    "problem": "Let \\(a,b,c,d\\) be a permutation of the numbers \\(11,13,15,17\\). If \\(x = ab+bc+cd+da\\), how many distinct possible values are there for \\(x\\)?",
+    "answer": "3",
+    "solution": "Notice that \\(x = ab+bc+cd+da = (a+c)(b+d)\\). Checking, there are \\(3\\) solutions for \\(x\\).",
     "image": null
+
   },
   {
     "id": 2,
     "title": "PoTW #2",
-    "problem": "A function \\(f: \\mathbb{R} \\to \\mathbb{R}\\) satisfies \\(f(x+y) = f(x) + f(y)\\) for all \\(x, y \\in \\mathbb{R}\\). If \\(f(1) = 2\\), what is \\(f(5)\\)?" ,
-    "answer": "10",
-    "solution": "Since \\(f(x+y) = f(x) + f(y)\\), we have \\(f(n) = nf(1)\\) for all positive integers \\(n\\). Therefore, \\(f(5) = 5f(1) = 5 \\cdot 2 = 10\\).",
+    "problem": "Let \\(a,b,c\\) be positive integers such that \\(a+b+c=12\\). Find the number of ordered triples \\((a,b,c)\\) with \\(a \\le b \\le c\\).",
+    "answer": "12",
+    "solution": "We can find that when \\(a=1\\) there are \\(5\\) possible triples, 4 when \\(a=2\\), 2 when \\(a=3\\), and 1 when \\(a=4\\). Therefore, there is a total of \\(12\\) possible solutions.",
     "image": null
   },
   {
     "id": 3,
     "title": "PoTW #3",
-    "problem": "The figure below shows a grid of $10$ squares in a row. Each square has a diagonal connecting its lower left vertex to its upper right vertex. A bug moves along the line segments from vertex to vertex, never traversing the same segment twice and never moving from right to left along a horizontal or diagonal segment. Let $N$ be the number of paths the bug can take from the lower left corner ($A$) to the upper right corner ($B$). One such path from $A$ to $B$ is shown by the thick line segments in the figure. Find $\\sqrt{N}$. (AIME II 2026; P2)",
-    "answer": "243",
-    "solution": "The key observation is that the path is completely determined by the choice of horizontal segments. Once the horizontal segments are chosen, the vertical and diagonal segments are fixed. For each of the $10$ squares, there are exactly $3$ choices for the horizontal segment: the upper horizontal edge, the lower horizontal edge, or no horizontal edge. Thus the total number of such paths is \\[N = 3^{10}.\\] Then \\[\\sqrt{N} = \\sqrt{3^{10}} = 3^{5} = \\boxed{243}.\\]",
-    "image": "/potw/images/potw3.png"
+    "problem": "George the Gambler enters a cassino to play a new game, \"Guess the Parity\". In the game, the dealer tosses six coins, and you have to bet on whether the number of heads is even or odd. However, George finds that the coins are rigged! He finds out that the six coins have the probability of landing heads equal to \\({\\frac{1}{2},\\frac{1}{3}, \\frac{1}{5}, \\frac{1}{7}, \\frac{1}{11}}\\) respectively. What is the expected chance of George winning  each round if he bets \"even\"?" ,
+    "answer": "1/2",
+    "solution": "WLOG, roll all coins other than the coin with probability \\(\\frac{1}{2}\\). No matter whether the previous tosses resulted in an odd or even number of heads, the coin we did not roll has a probability of \\(\\frac{1}{2}\\) of being heads or tails, so the probability of the total number of heads being even is exactly \\(\\frac{1}{2}\\)",
+    "image": null
   },
   {
     "id": 4,
     "title": "PoTW #4",
-    "problem": "Let \\(a,b,c\\) be positive integers such that \\(a+b+c=12\\). Find the number of ordered triples \\((a,b,c)\\) with \\(a \\le b \\le c\\).",
-    "answer": "12",
-    "solution": "We can find that when \\(a=1\\) there are \\(5\\) possible triples, 4 when \\(a=2\\), 2 when \\(a=3\\), and 1 when \\(a=4\\). Therefore, there is a total of \\(12\\) possible solutions.",
+    "problem": "Find the sum of all real values of $z$ satisfying \\(\\sqrt{z^2-2026}+z^2=2027\\).",
+    "answer": "0",
+    "solution": "It is easy to realize that whatever real number \\(z_0\\) satisfies the above question, \\(-z_0\\) satisfies as well. Thus, the sum of all real values for \\(z\\) is \\(0\\).",
     "image": null
   }
 ]
